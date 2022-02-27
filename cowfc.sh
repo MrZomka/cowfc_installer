@@ -68,7 +68,7 @@ mod1="proxy"      # This is a proxy mod that is dependent on the other 2
 mod2="proxy_http" # This is related to mod1
 mod3="php7.1"
 UPDATE_FILE="$0.tmp"
-UPDATE_BASE="https://raw.githubusercontent.com/EnergyCube/cowfc_installer/master/cowfc.sh"
+UPDATE_BASE="https://raw.githubusercontent.com/MrZomka/cowfc_installer/master/cowfc.sh"
 # Functions
 
 function update() {
@@ -314,19 +314,13 @@ function config_mysql() {
     read -rp "Please enter the username you wish to use: " firstuser
     read -rp "Please enter a password: " password
     hash=$(/var/www/CoWFC/SQL/bcrypt-hash "$password")
-    echo "We will now set the rank for $firstuser"
-    echo "At the moment, this does nothing. However in later releases, we plan to restrict who can do what."
-    echo "1: First Rank"
-    echo "2: Second Rank"
-    echo "3: Third Rank"
-    read -rp "Please enter a rank number [1-3]: " firstuserrank
     echo "That's all the informatio I'll need for now."
     echo "Setting up the cowfc users database"
-    echo "create database cowfc" | mysql -u root -ppasswordhere
+    echo "create database cowfc" | mysql -u root
     echo "Now importing dumped cowfc database..."
-    mysql -u root -ppasswordhere cowfc </var/www/CoWFC/SQL/cowfc.sql
+    mysql -u root cowfc </var/www/CoWFC/SQL/cowfc.sql
     echo "Now inserting user $firstuser into the database with password $password, hashed as $hash."
-    echo "insert into users (Username, Password, Rank) values ('$firstuser','$hash','$firstuserrank');" | mysql -u root -ppasswordhere cowfc
+    echo "insert into users (Username, Password) values ('$firstuser','$hash');" | mysql -u root cowfc
 }
 function re() {
     echo "For added security, we recommend setting up Google's reCaptcha.
